@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from database import get_db
+from .auth import get_current_user
 from trading.application.place_order import PlaceOrderUseCase
 from trading.application.cancel_order import CancelOrderUseCase
 from trading.application.get_order import GetOrderUseCase
@@ -13,7 +14,6 @@ from trading.application.dto import (
     OrderResponse,
     OrderDetailResponse,
     OrderListResponse,
-    ErrorResponse
 )
 from trading.domain.exceptions import (
     OrderNotFoundException,
@@ -31,9 +31,14 @@ router = APIRouter(prefix="/api/orders", tags=["Orders"])
 @router.post("/", response_model=OrderResponse, status_code=201)
 def place_order(
     request: PlaceOrderRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)  # ← Tambah JWT protection
 ):
     try:
+        # Optional: Validasi user_id == current_user
+        if request.user_id != current_user["username"]:
+            raise HTTPException(status_code=403, detail="Cannot place order for another user")
+        
         use_case = PlaceOrderUseCase(db)
         return use_case.execute(request)
     
@@ -48,9 +53,14 @@ def place_order(
 def get_order(
     order_id: str,
     user_id: str = Query(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)  # ← JWT protection
 ):
     try:
+        # Validasi user_id == current_user
+        if user_id != current_user["username"]:
+            raise HTTPException(status_code=403, detail="Cannot access another user's order")
+        
         use_case = GetOrderUseCase(db)
         return use_case.execute(order_id, user_id)
     
@@ -68,9 +78,14 @@ def get_order(
 def list_orders(
     user_id: str = Query(...),
     symbol: Optional[str] = Query(None),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)  # ← JWT protection
 ):
     try:
+        # Validasi user_id == current_user
+        if user_id != current_user["username"]:
+            raise HTTPException(status_code=403, detail="Cannot access another user's orders")
+        
         use_case = ListOrdersUseCase(db)
         return use_case.execute(user_id, symbol)
     
@@ -82,9 +97,14 @@ def list_orders(
 def cancel_order(
     order_id: str,
     user_id: str = Query(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: dict = Depends(get_current_user)  # ← JWT protection
 ):
     try:
+        # Validasi user_id == current_user
+        if user_id != current_user["username"]:
+            raise HTTPException(status_code=403, detail="Cannot cancel another user's order")
+        
         request = CancelOrderRequest(order_id=order_id, user_id=user_id)
         use_case = CancelOrderUseCase(db)
         return use_case.execute(request)

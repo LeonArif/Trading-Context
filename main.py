@@ -1,23 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from trading.infrastructure.models import OrderModel, TradeModel
 from trading.api.routes import router as orders_router
+from trading.api.auth_routes import router as auth_router  # ← Tambah import
 
-print("=" * 60)
-print("Starting Trading Platform API...")
-print("=" * 60)
-
-print("\nCreating database tables...")
 Base.metadata.create_all(bind=engine)
-print("Database tables created!")
 
 app = FastAPI(
     title="Trading Platform API",
-    description="DDD Implementation - Trading Context (Core Domain)",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    description="RESTful API untuk trading cryptocurrency dengan DDD",
+    version="1.0.0"
 )
 
 app.add_middleware(
@@ -28,18 +20,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(orders_router)
+app.include_router(auth_router)    # ← Register auth router
+app.include_router(orders_router)  # ← Register orders router
 
 @app.get("/")
 def root():
     return {
         "message": "Trading Platform API",
-        "status": "running",
         "version": "1.0.0",
-        "database": "SQLite",
-        "docs": "http://localhost:8000/docs",
+        "docs": "/docs"
     }
-
 @app.get("/health")
 def health():
     return {"status": "healthy", "database": "connected"}
