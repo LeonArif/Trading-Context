@@ -33,6 +33,8 @@ trading/
 │   ├── get_order.py
 │   └── list_orders.py
 └── api/
+    ├── auth_routes.py
+    ├── auth.py
     └── routes.py
 main.py
 database.py
