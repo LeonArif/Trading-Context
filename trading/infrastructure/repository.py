@@ -115,17 +115,6 @@ class OrderRepository:
             updated_at=order_model.updated_at
         )
     
-    def _update_model_from_domain(self, order_model: OrderModel, order: Order) -> None:
-        order_model.user_id = order.user_id
-        order_model.symbol = order.trading_pair.symbol
-        order_model.side = OrderSideDB[order.side.value]
-        order_model.type = OrderTypeDB[order.order_type.value]
-        order_model.price = order.price.amount
-        order_model.quantity = order.quantity
-        order_model.filled_quantity = order.filled_quantity
-        order_model. status = OrderStatusDB[order. status.value]
-        order_model.updated_at = order. updated_at
-
 
 class TradeRepository:
     def __init__(self, db_session: Session):
