@@ -18,29 +18,65 @@ RESTful API untuk trading platform dengan arsitektur Domain-Driven Design (DDD).
 ## Architecture
 
 ```
-trading/
-├── domain/
-│   ├── value_objects.py
-│   ├── exceptions.py
-│   └── order.py
-├── infrastructure/
-│   ├── models.py
-│   └── repository.py
-├── application/
-│   ├── dto.py
-│   ├── place_order.py
-│   ├── cancel_order.py
-│   ├── get_order.py
-│   └── list_orders.py
-└── api/
-    ├── auth_routes.py
-    ├── auth.py
-    └── routes.py
-main.py
-database.py
-requirements.txt
-README.md
-trading.db
+Trading-Context/
+│
+├── . github/
+│   └── workflows/
+│       └── ci. yml                      # CI/CD workflow
+│
+├── trading/                            # Main application package
+│   ├── __init__.py                     # Package initializer (kemungkinan kosong)
+│   │
+│   ├── domain/                         # Domain Layer (Business Logic)
+│   │   ├── __init__.py
+│   │   ├── exceptions. py               # Custom domain exceptions
+│   │   ├── order. py                    # Order aggregate/entity
+│   │   └── value_objects.py            # Value objects (Money, TradingPair, Enums)
+│   │
+│   ├── infrastructure/                 # Infrastructure Layer (Persistence)
+│   │   ├── __init__.py
+│   │   ├── models. py                   # SQLAlchemy ORM models
+│   │   └── repository.py               # Repository pattern implementation
+│   │
+│   ├── application/                    # Application Layer (Use Cases)
+│   │   ├── __init__.py
+│   │   ├── dto. py                      # Data Transfer Objects (Pydantic models)
+│   │   ├── place_order.py              # Place order use case
+│   │   ├── cancel_order.py             # Cancel order use case
+│   │   ├── get_order.py                # Get order use case
+│   │   └── list_orders.py              # List orders use case
+│   │
+│   └── api/                            # API Layer (Presentation)
+│       ├── __init__.py
+│       ├── auth.py                     # Authentication logic (JWT, Argon2)
+│       ├── auth_routes.py              # Authentication endpoints (/api/token)
+│       └── routes.py                   # Order endpoints (/api/orders/*)
+│
+├── tests/                              # Test suite
+│   ├── __init__.py
+│   ├── conftest.py                     # Pytest fixtures & test configuration
+│   ├── test_auth.py                    # Authentication tests
+│   ├── test_domain.py                  # Domain model tests (basic)
+│   ├── test_exceptions.py              # Exception handling tests
+│   ├── test_list_orders_use_case.py    # List orders use case tests
+│   ├── test_order_domain.py            # Comprehensive order domain tests
+│   ├── test_orders. py                  # API integration tests
+│   ├── test_repository.py              # Repository tests
+│   ├── test_routes_extended.py         # Extended API routes tests
+│   └── test_value_objects.py           # Value objects tests
+│
+├── __pycache__/                        # Python bytecode cache (gitignored)
+│
+├── .coverage                           # Coverage data file
+├── .gitignore                          # Git ignore rules
+├── database.py                         # Database configuration & session management
+├── main.py                             # FastAPI application entry point
+├── pytest.ini                          # Pytest configuration
+├── README.md                           # Project documentation
+├── requirements.txt                    # Python dependencies
+├── test. py                             # Standalone test script (optional)
+└── trading. db                          # SQLite database file (gitignored recommended)
+
 ```
 
 ---
