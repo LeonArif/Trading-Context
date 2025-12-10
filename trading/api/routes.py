@@ -30,7 +30,7 @@ router = APIRouter(prefix="/api/orders", tags=["Orders"])
 
 @router.post("/", response_model=OrderResponse, status_code=201)
 def place_order(
-    request:  PlaceOrderRequest,
+    request: PlaceOrderRequest,
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
@@ -40,22 +40,22 @@ def place_order(
         
         use_case = PlaceOrderUseCase(db)
         result = use_case.execute(request)
-        db.commit()  # ✅ TAMBAHKAN commit di sini
+        db.commit()
         return result
     
     except (InvalidPriceException, InvalidQuantityException, OrderValidationException) as e:
-        db.rollback()  # ✅ TAMBAHKAN rollback jika error
+        db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
     
     except TradingDomainException as e:
-        db. rollback()
+        db.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.get("/{order_id}", response_model=OrderDetailResponse)
 def get_order(
     order_id: str,
-    user_id: str = Query(... ),
+    user_id: str = Query(...),
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
@@ -69,7 +69,7 @@ def get_order(
     except OrderNotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
     
-    except UnauthorizedOrderAccessException as e: 
+    except UnauthorizedOrderAccessException as e:
         raise HTTPException(status_code=403, detail=str(e))
     
     except TradingDomainException as e:
@@ -84,7 +84,7 @@ def list_orders(
     current_user: dict = Depends(get_current_user)
 ):
     try:
-        if user_id != current_user["username"]: 
+        if user_id != current_user["username"]:
             raise HTTPException(status_code=403, detail="Cannot access another user's orders")
         
         use_case = ListOrdersUseCase(db)
@@ -108,7 +108,7 @@ def cancel_order(
         request = CancelOrderRequest(order_id=order_id, user_id=user_id)
         use_case = CancelOrderUseCase(db)
         result = use_case.execute(request)
-        db.commit()  # ✅ TAMBAHKAN commit di sini
+        db.commit()
         return result
     
     except OrderNotFoundException as e:
@@ -119,10 +119,10 @@ def cancel_order(
         db.rollback()
         raise HTTPException(status_code=403, detail=str(e))
     
-    except InvalidOrderOperationException as e: 
+    except InvalidOrderOperationException as e:
         db.rollback()
         raise HTTPException(status_code=400, detail=str(e))
     
-    except TradingDomainException as e: 
+    except TradingDomainException as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=str(e))

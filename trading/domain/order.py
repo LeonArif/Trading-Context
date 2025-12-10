@@ -39,7 +39,7 @@ class Order:
         self.side = side
         self.order_type = order_type
         self.price = price
-        self. quantity = quantity
+        self.quantity = quantity
         self.status = status
         self.filled_quantity = filled_quantity
         self.created_at = created_at or datetime.now(timezone.utc)
@@ -138,10 +138,10 @@ class Order:
             )
         
         self.status = OrderStatus.OPEN
-        self. updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(timezone.utc)
     
-    def fill(self, filled_quantity:  Decimal, execution_price: Optional[Money] = None):
-        if self.status not in [OrderStatus.OPEN, OrderStatus. PARTIAL_FILLED]:
+    def fill(self, filled_quantity: Decimal, execution_price: Optional[Money] = None):
+        if self.status not in [OrderStatus.OPEN, OrderStatus.PARTIAL_FILLED]:
             raise InvalidOrderOperationException(
                 f"Cannot fill order with status {self.status}"
             )
@@ -152,7 +152,7 @@ class Order:
                 "Filled quantity must be greater than 0"
             )
         
-        new_filled_quantity = self. filled_quantity + filled_quantity
+        new_filled_quantity = self.filled_quantity + filled_quantity
         
         if new_filled_quantity > self.quantity:
             raise InvalidQuantityException(
@@ -169,18 +169,18 @@ class Order:
         if self.filled_quantity >= self.quantity:
             self.status = OrderStatus.FILLED
         else:
-            self. status = OrderStatus.PARTIAL_FILLED
+            self.status = OrderStatus.PARTIAL_FILLED
         
-        self. updated_at = datetime.now(timezone.utc)
+        self.updated_at = datetime.now(timezone.utc)
     
     def cancel(self):
-        if self.status not in [OrderStatus. OPEN, OrderStatus.PARTIAL_FILLED]:
+        if self.status not in [OrderStatus.OPEN, OrderStatus.PARTIAL_FILLED]:
             raise InvalidOrderOperationException(
                 f"Cannot cancel order with status {self.status}. "
                 f"Only OPEN or PARTIAL_FILLED orders can be cancelled."
             )
         
-        self. status = OrderStatus.CANCELLED
+        self.status = OrderStatus.CANCELLED
         self.updated_at = datetime.now(timezone.utc)
     
     def reject(self, reason: str):
@@ -194,7 +194,7 @@ class Order:
     
     @property
     def remaining_quantity(self) -> Decimal:
-        return self.quantity - self. filled_quantity
+        return self.quantity - self.filled_quantity
     
     @property
     def filled_percentage(self) -> Decimal:
@@ -204,12 +204,12 @@ class Order:
     
     @property
     def total_value(self) -> Money:
-        total_amount = self.price. amount * self.quantity
-        return Money(total_amount, self. price.currency)
+        total_amount = self.price.amount * self.quantity
+        return Money(total_amount, self.price.currency)
     
     @property
     def filled_value(self) -> Money:
-        filled_amount = self.price. amount * self.filled_quantity
+        filled_amount = self.price.amount * self.filled_quantity
         return Money(filled_amount, self.price.currency)
     
     @property
@@ -218,19 +218,19 @@ class Order:
     
     @property
     def is_closed(self) -> bool:
-        return self.status in [OrderStatus.FILLED, OrderStatus.CANCELLED, OrderStatus. REJECTED]
+        return self.status in [OrderStatus.FILLED, OrderStatus.CANCELLED, OrderStatus.REJECTED]
     
     def _validate(self):
         self._validate_price()
         self._validate_quantity()
     
     def _validate_price(self):
-        if self.order_type == OrderType.MARKET: 
+        if self.order_type == OrderType.MARKET:
             return
         
         if self.price.amount <= 0:
             raise InvalidPriceException(
-                str(self. price.amount),
+                str(self.price.amount),
                 "Price must be greater than 0"
             )
         
@@ -240,13 +240,13 @@ class Order:
                 f"Price must be at least {self.MIN_PRICE}"
             )
         
-        if self.price.amount > self. MAX_PRICE:
+        if self.price.amount > self.MAX_PRICE:
             raise InvalidPriceException(
                 str(self.price.amount),
                 f"Price must not exceed {self.MAX_PRICE}"
             )
         
-        if self.price.currency != self. trading_pair.quote_currency:
+        if self.price.currency != self.trading_pair.quote_currency:
             raise OrderValidationException(
                 f"Price currency {self.price.currency} does not match "
                 f"quote currency {self.trading_pair.quote_currency}"
@@ -273,7 +273,7 @@ class Order:
     
     def __str__(self):
         return (
-            f"Order({self. order_id}, "
+            f"Order({self.order_id}, "
             f"{self.side.value} {self.quantity} {self.trading_pair.symbol} "
             f"@ {self.price}, status={self.status.value})"
         )
@@ -281,11 +281,11 @@ class Order:
     def __repr__(self):
         return (
             f"Order(order_id='{self.order_id}', "
-            f"user_id='{self. user_id}', "
-            f"trading_pair={self. trading_pair}, "
+            f"user_id='{self.user_id}', "
+            f"trading_pair={self.trading_pair}, "
             f"side={self.side}, "
-            f"type={self. order_type}, "
+            f"type={self.order_type}, "
             f"price={self.price}, "
-            f"quantity={self. quantity}, "
+            f"quantity={self.quantity}, "
             f"status={self.status})"
         )
