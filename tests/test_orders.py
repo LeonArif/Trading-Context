@@ -66,7 +66,7 @@ def test_cancel_order(client):
 def test_list_orders(client):
     token = get_token(client)
     headers = {"Authorization": f"Bearer {token}"}
-    resp = client.get("/api/orders/? user_id=LeonArif", headers=headers)
+    resp = client.get("/api/orders/?user_id=LeonArif", headers=headers)
     assert resp.status_code == 200
     assert "orders" in resp.json()
     assert "total" in resp.json()
