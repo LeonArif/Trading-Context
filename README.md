@@ -22,60 +22,63 @@ Trading-Context/
 │
 ├── . github/
 │   └── workflows/
-│       └── ci. yml                      # CI/CD workflow
+│       └── ci. yml                    
 │
-├── trading/                            # Main application package
-│   ├── __init__.py                     # Package initializer (kemungkinan kosong)
+├── trading/                          
+│   ├── __init__.py                    
 │   │
-│   ├── domain/                         # Domain Layer (Business Logic)
+│   ├── domain/                     
 │   │   ├── __init__.py
-│   │   ├── exceptions. py               # Custom domain exceptions
-│   │   ├── order. py                    # Order aggregate/entity
-│   │   └── value_objects.py            # Value objects (Money, TradingPair, Enums)
+│   │   ├── exceptions. py              
+│   │   ├── order. py                   
+│   │   └── value_objects.py           
 │   │
-│   ├── infrastructure/                 # Infrastructure Layer (Persistence)
+│   ├── infrastructure/                 
 │   │   ├── __init__.py
-│   │   ├── models. py                   # SQLAlchemy ORM models
-│   │   └── repository.py               # Repository pattern implementation
+│   │   ├── models. py               
+│   │   └── repository.py               
 │   │
-│   ├── application/                    # Application Layer (Use Cases)
+│   ├── application/                    
 │   │   ├── __init__.py
-│   │   ├── dto. py                      # Data Transfer Objects (Pydantic models)
-│   │   ├── place_order.py              # Place order use case
-│   │   ├── cancel_order.py             # Cancel order use case
-│   │   ├── get_order.py                # Get order use case
-│   │   └── list_orders.py              # List orders use case
+│   │   ├── dto. py                 
+│   │   ├── place_order.py            
+│   │   ├── cancel_order.py             
+│   │   ├── get_order.py                
+│   │   └── list_orders.py              
 │   │
-│   └── api/                            # API Layer (Presentation)
+│   └── api/                          
 │       ├── __init__.py
-│       ├── auth.py                     # Authentication logic (JWT, Argon2)
-│       ├── auth_routes.py              # Authentication endpoints (/api/token)
-│       └── routes.py                   # Order endpoints (/api/orders/*)
+│       ├── auth.py                     
+│       ├── auth_routes.py             
+│       └── routes.py                   
 │
-├── tests/                              # Test suite
+├── tests/                              
 │   ├── __init__.py
-│   ├── conftest.py                     # Pytest fixtures & test configuration
-│   ├── test_auth.py                    # Authentication tests
-│   ├── test_domain.py                  # Domain model tests (basic)
-│   ├── test_exceptions.py              # Exception handling tests
-│   ├── test_list_orders_use_case.py    # List orders use case tests
-│   ├── test_order_domain.py            # Comprehensive order domain tests
-│   ├── test_orders. py                  # API integration tests
-│   ├── test_repository.py              # Repository tests
-│   ├── test_routes_extended.py         # Extended API routes tests
-│   └── test_value_objects.py           # Value objects tests
+│   ├── conftest.py                     
+│   ├── test_auth.py                    
+│   ├── test_domain.py                  
+│   ├── test_exceptions.py              
+│   ├── test_list_orders_use_case.py   
+│   ├── test_order_domain.py            
+│   ├── test_orders. py                  
+│   ├── test_repository.py             
+│   ├── test_routes_extended.py         
+│   └── test_value_objects.py           
 │
-├── __pycache__/                        # Python bytecode cache (gitignored)
+├── __pycache__/                        
 │
-├── .coverage                           # Coverage data file
-├── .gitignore                          # Git ignore rules
-├── database.py                         # Database configuration & session management
-├── main.py                             # FastAPI application entry point
-├── pytest.ini                          # Pytest configuration
-├── README.md                           # Project documentation
-├── requirements.txt                    # Python dependencies
-├── test. py                             # Standalone test script (optional)
-└── trading. db                          # SQLite database file (gitignored recommended)
+├── .coverage                           
+├── .gitignore                          
+├── Dockerfile     
+├── .dockerignore       
+├── database.py                         
+├── main.py                            
+├── pytest.ini                         
+├── README.md                          
+├── requirements.txt                    
+├── test. py                            
+└── trading. db   
+
 
 ```
 
