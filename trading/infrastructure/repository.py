@@ -15,17 +15,9 @@ class OrderRepository:
         self.db = db_session
     
     def save(self, order: Order) -> None:
-        existing_order = self.db.query(OrderModel).filter_by(
-            order_id=order.order_id
-        ).first()
-        
-        if existing_order:
-            self._update_model_from_domain(existing_order, order)
-        else:
-            order_model = self._domain_to_model(order)
-            self.db.add(order_model)
-        
-        self.db.flush()
+        order_model = self._domain_to_model(order)
+        self.db.merge(order_model)
+        # Don't flush() or commit() here - let the endpoint handle transaction
     
     def find_by_id(self, order_id: str) -> Order:
         order_model = self.db.query(OrderModel).filter_by(
@@ -85,7 +77,6 @@ class OrderRepository:
         
         if order_model:
             self.db.delete(order_model)
-            self.db.flush()
     
     def _domain_to_model(self, order: Order) -> OrderModel:
         return OrderModel(

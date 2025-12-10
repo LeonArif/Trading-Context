@@ -27,6 +27,9 @@ class PlaceOrderUseCase:
             quantity=Decimal(str(request.quantity))
         )
         
+        # Open the order after validation
+        order.open()
+        
         self.order_repo.save(order)
         
         return OrderResponse(
