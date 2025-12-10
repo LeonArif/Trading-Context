@@ -1,0 +1,9 @@
+pytest
+pytest-cov
+httpx
+black
+flake8
+isort
+mypy
+pre-commit
+coverage

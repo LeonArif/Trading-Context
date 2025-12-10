@@ -6,25 +6,22 @@ from .dto import OrderDetailResponse
 
 
 class GetOrderUseCase:
-    
-    def __init__(self, db_session: Session):
-        self.db = db_session
-        self.order_repo = OrderRepository(db_session)
+    def __init__(self, db: Session):
+        self.order_repo = OrderRepository(db)
     
     def execute(self, order_id: str, user_id: str) -> OrderDetailResponse:
-        
-        order = self.order_repo.find_by_id(order_id)
+        order = self.order_repo. find_by_id(order_id)
         
         if order.user_id != user_id:
             raise UnauthorizedOrderAccessException(user_id, order_id)
         
         return OrderDetailResponse(
             order_id=order.order_id,
-            user_id=order.user_id,
+            user_id=order. user_id,
             symbol=order.trading_pair.symbol,
-            side=order.side.value,
+            side=order.side. value,
             order_type=order.order_type.value,
-            price=order.price.amount,
+            price=order.price. amount,
             quantity=order.quantity,
             filled_quantity=order.filled_quantity,
             status=order.status.value,
