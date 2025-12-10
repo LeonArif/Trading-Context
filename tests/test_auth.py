@@ -28,3 +28,11 @@ def client():
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as c:
         yield c
+
+def test_token_wrong_password(client):
+    resp = client.post("/api/token", data={"username": "LeonArif", "password": "wrongpass"})
+    assert resp.status_code == 401
+
+def test_token_wrong_username(client):
+    resp = client.post("/api/token", data={"username": "WrongUser", "password": "password123"})
+    assert resp.status_code == 401
