@@ -1,9 +1,15 @@
 """Comprehensive tests for value objects"""
+
 from decimal import Decimal
 import pytest
 
 from trading.domain.value_objects import (
-    OrderSide, OrderType, OrderStatus, TradingPair, Money, create_money
+    OrderSide,
+    OrderType,
+    OrderStatus,
+    TradingPair,
+    Money,
+    create_money,
 )
 
 

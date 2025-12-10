@@ -1,4 +1,5 @@
 """Comprehensive tests for domain exceptions"""
+
 import pytest
 
 from trading.domain.exceptions import (

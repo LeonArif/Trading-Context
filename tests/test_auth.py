@@ -15,12 +15,14 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 # create schema for tests
 Base.metadata.create_all(bind=engine)
 
+
 def override_get_db():
     db = TestingSessionLocal()
     try:
         yield db
     finally:
         db.close()
+
 
 @pytest.fixture(scope="session")
 def client():
@@ -29,10 +31,16 @@ def client():
     with TestClient(app) as c:
         yield c
 
+
 def test_token_wrong_password(client):
-    resp = client.post("/api/token", data={"username": "LeonArif", "password": "wrongpass"})
+    resp = client.post(
+        "/api/token", data={"username": "LeonArif", "password": "wrongpass"}
+    )
     assert resp.status_code == 401
 
+
 def test_token_wrong_username(client):
-    resp = client.post("/api/token", data={"username": "WrongUser", "password": "password123"})
+    resp = client.post(
+        "/api/token", data={"username": "WrongUser", "password": "password123"}
+    )
     assert resp.status_code == 401

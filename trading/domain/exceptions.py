@@ -63,8 +63,7 @@ class PriceOutOfRangeException(TradingDomainException):
         self.min_price = min_price
         self.max_price = max_price
         super().__init__(
-            f"Price {price} out of range. "
-            f"Allowed range: {min_price} - {max_price}"
+            f"Price {price} out of range. " f"Allowed range: {min_price} - {max_price}"
         )
 
 
@@ -76,27 +75,19 @@ class InvalidQuantityException(TradingDomainException):
 
 class QuantityBelowMinimumException(InvalidQuantityException):
     def __init__(self, quantity: str, minimum: str):
-        super().__init__(
-            quantity,
-            f"Quantity must be at least {minimum}"
-        )
+        super().__init__(quantity, f"Quantity must be at least {minimum}")
 
 
 class QuantityAboveMaximumException(InvalidQuantityException):
     def __init__(self, quantity: str, maximum: str):
-        super().__init__(
-            quantity,
-            f"Quantity must not exceed {maximum}"
-        )
+        super().__init__(quantity, f"Quantity must not exceed {maximum}")
 
 
 class UnauthorizedOrderAccessException(TradingDomainException):
     def __init__(self, user_id: str, order_id: str):
         self.user_id = user_id
         self.order_id = order_id
-        super().__init__(
-            f"User {user_id} not authorized to access order {order_id}"
-        )
+        super().__init__(f"User {user_id} not authorized to access order {order_id}")
 
 
 class KYCRequiredException(TradingDomainException):
@@ -104,8 +95,7 @@ class KYCRequiredException(TradingDomainException):
         self.user_id = user_id
         self.required_tier = required_tier
         super().__init__(
-            f"KYC verification required. "
-            f"User {user_id} needs tier: {required_tier}"
+            f"KYC verification required. " f"User {user_id} needs tier: {required_tier}"
         )
 
 

@@ -19,7 +19,7 @@ fake_users_db = {
     "LeonArif": {
         "username": "LeonArif",
         # Hash untuk password: password123
-        "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$zwWjjyzAm4tCUyeeXRCIFw$WvzW2LGByKzgEGiF9dmCPOOu4r/BpYffWUr7kfoc2kk"
+        "hashed_password": "$argon2id$v=19$m=65536,t=3,p=4$zwWjjyzAm4tCUyeeXRCIFw$WvzW2LGByKzgEGiF9dmCPOOu4r/BpYffWUr7kfoc2kk",
     }
 }
 
@@ -51,7 +51,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        )
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -70,7 +72,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    
+
     user = fake_users_db.get(username)
     if user is None:
         raise credentials_exception
