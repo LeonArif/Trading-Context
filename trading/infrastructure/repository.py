@@ -15,17 +15,9 @@ class OrderRepository:
         self.db = db_session
     
     def save(self, order: Order) -> None:
-        existing_order = self.db.query(OrderModel).filter_by(
-            order_id=order.order_id
-        ).first()
-        
-        if existing_order:
-            self._update_model_from_domain(existing_order, order)
-        else:
-            order_model = self._domain_to_model(order)
-            self.db.add(order_model)
-        
-        self.db.flush()
+        order_model = self._domain_to_model(order)
+        self.db.merge(order_model)
+        # Don't flush() or commit() here - let the endpoint handle transaction
     
     def find_by_id(self, order_id: str) -> Order:
         order_model = self.db.query(OrderModel).filter_by(
@@ -85,7 +77,6 @@ class OrderRepository:
         
         if order_model:
             self.db.delete(order_model)
-            self.db.flush()
     
     def _domain_to_model(self, order: Order) -> OrderModel:
         return OrderModel(
@@ -124,17 +115,6 @@ class OrderRepository:
             updated_at=order_model.updated_at
         )
     
-    def _update_model_from_domain(self, order_model: OrderModel, order: Order) -> None:
-        order_model.user_id = order.user_id
-        order_model.symbol = order.trading_pair.symbol
-        order_model.side = OrderSideDB[order.side.value]
-        order_model.type = OrderTypeDB[order.order_type.value]
-        order_model.price = order.price.amount
-        order_model.quantity = order.quantity
-        order_model.filled_quantity = order.filled_quantity
-        order_model. status = OrderStatusDB[order. status.value]
-        order_model.updated_at = order. updated_at
-
 
 class TradeRepository:
     def __init__(self, db_session: Session):

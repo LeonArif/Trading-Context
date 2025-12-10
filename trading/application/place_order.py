@@ -27,6 +27,9 @@ class PlaceOrderUseCase:
             quantity=Decimal(str(request.quantity))
         )
         
+        # Transition order from PENDING to OPEN status
+        order.open()
+        
         self.order_repo.save(order)
         
         return OrderResponse(
