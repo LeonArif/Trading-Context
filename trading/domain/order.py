@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from decimal import Decimal
 from uuid import uuid4
 from typing import Optional
@@ -42,8 +42,8 @@ class Order:
         self. quantity = quantity
         self.status = status
         self.filled_quantity = filled_quantity
-        self.created_at = created_at or datetime.utcnow()
-        self.updated_at = updated_at or datetime.utcnow()
+        self.created_at = created_at or datetime.now(timezone.utc)
+        self.updated_at = updated_at or datetime.now(timezone.utc)
     
     @classmethod
     def create(
@@ -138,7 +138,7 @@ class Order:
             )
         
         self.status = OrderStatus.OPEN
-        self. updated_at = datetime.utcnow()
+        self. updated_at = datetime.now(timezone.utc)
     
     def fill(self, filled_quantity:  Decimal, execution_price: Optional[Money] = None):
         if self.status not in [OrderStatus.OPEN, OrderStatus. PARTIAL_FILLED]:
@@ -171,7 +171,7 @@ class Order:
         else:
             self. status = OrderStatus.PARTIAL_FILLED
         
-        self. updated_at = datetime.utcnow()
+        self. updated_at = datetime.now(timezone.utc)
     
     def cancel(self):
         if self.status not in [OrderStatus. OPEN, OrderStatus.PARTIAL_FILLED]:
@@ -181,7 +181,7 @@ class Order:
             )
         
         self. status = OrderStatus.CANCELLED
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now(timezone.utc)
     
     def reject(self, reason: str):
         if self.status != OrderStatus.PENDING: 
@@ -190,7 +190,7 @@ class Order:
             )
         
         self.status = OrderStatus.REJECTED
-        self.updated_at = datetime.utcnow()
+        self.updated_at = datetime.now(timezone.utc)
     
     @property
     def remaining_quantity(self) -> Decimal:
